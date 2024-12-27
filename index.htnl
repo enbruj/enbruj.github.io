@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Word Redirector</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 50px;
+    }
+    form {
+      margin-top: 20px;
+    }
+    input, button {
+      padding: 10px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Word Redirector</h1>
+  <p>Enter a word below, and you'll be redirected to a corresponding page.</p>
+  <form id="redirectForm">
+    <label for="word">Enter a word:</label>
+    <input type="text" id="word" name="word" placeholder="e.g., apple" required>
+    <button type="submit">Go</button>
+  </form>
+
+  <script>
+    document.getElementById('redirectForm').addEventListener('submit', function (event) {
+      event.preventDefault();
+      const word = document.getElementById('word').value.trim();
+      if (word) {
+        // Redirect to the subdirectory
+        const newURL = `${window.location.origin}/${word}`;
+        window.location.href = newURL;
+      } else {
+        alert('Please enter a valid word.');
+      }
+    });
+  </script>
+</body>
+</html>
