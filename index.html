@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Word Redirector</title>
+  <title>Dynamic Word Content</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       text-align: center;
       margin-top: 50px;
     }
-    form {
-      margin-top: 20px;
+    #content {
+      margin-top: 30px;
     }
     input, button {
       padding: 10px;
@@ -20,24 +20,59 @@
   </style>
 </head>
 <body>
-  <h1>Word Redirector</h1>
-  <p>Enter a word below, and you'll be redirected to a corresponding page.</p>
+  <h1>Dynamic Content Viewer</h1>
+  <p>Enter a word to display custom content:</p>
   <form id="redirectForm">
     <label for="word">Enter a word:</label>
     <input type="text" id="word" name="word" placeholder="e.g., apple" required>
     <button type="submit">Go</button>
   </form>
 
+  <div id="content">
+    <p>Welcome! Enter a word to see its content.</p>
+  </div>
+
   <script>
+    // Function to update content dynamically
+    function updateContent(word) {
+      const contentDiv = document.getElementById('content');
+      contentDiv.innerHTML = `
+        <h2>Content for "${word}"</h2>
+        <p>This is the custom content for the word: <strong>${word}</strong>.</p>
+      `;
+    }
+
+    // Handle form submission
     document.getElementById('redirectForm').addEventListener('submit', function (event) {
       event.preventDefault();
       const word = document.getElementById('word').value.trim();
+
       if (word) {
-        // Redirect to the subdirectory
-        const newURL = `${window.location.origin}/${word}`;
-        window.location.href = newURL;
+        // Update the URL to simulate a subdirectory
+        window.history.pushState({}, '', `/${word}`);
+
+        // Update the page content dynamically
+        updateContent(word);
       } else {
         alert('Please enter a valid word.');
+      }
+    });
+
+    // Handle back/forward navigation
+    window.addEventListener('popstate', function () {
+      const currentPath = window.location.pathname.replace('/', '');
+      if (currentPath) {
+        updateContent(currentPath);
+      } else {
+        document.getElementById('content').innerHTML = '<p>Welcome! Enter a word to see its content.</p>';
+      }
+    });
+
+    // Load content if a word is present in the URL on page load
+    window.addEventListener('DOMContentLoaded', function () {
+      const currentPath = window.location.pathname.replace('/', '');
+      if (currentPath) {
+        updateContent(currentPath);
       }
     });
   </script>
